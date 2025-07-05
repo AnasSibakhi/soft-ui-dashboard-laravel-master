@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\InfoUserController;
 use App\Http\Controllers\Admin\RegisterController;
 use App\Http\Controllers\Admin\SessionsController;
 use App\Http\Controllers\Admin\ChangePasswordController;
+use App\Http\Controllers\Admin\TrackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,9 @@ Route::middleware(['guest'])->group(function () {
 	Route::post('/forgot-password', [ResetController::class, 'sendEmail']);
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('user.profile');
+Route::put('/profile', [ProfileController::class, 'update'])->name('user.profile.update');
+
 });
 
 // ✅ واجهات الأدمن فقط
@@ -42,8 +46,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/virtual-reality', fn() => view('admin.virtual-reality'))->name('virtual-reality');
     Route::get('/static-sign-in', fn() => view('admin.static-sign-in'))->name('sign-in');
     Route::get('/static-sign-up', fn() => view('admin.static-sign-up'))->name('sign-up');
-    Route::get('/user-profile', [InfoUserController::class, 'create']);
-    Route::post('/user-profile', [InfoUserController::class, 'store']);
+    // Route::get('/user-profile', [InfoUserController::class, 'create']);
+    // Route::post('/user-profile', [InfoUserController::class, 'store']);
     Route::get('/user-management', [InfoUserController::class, 'index'])->name('user-management');
     Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
@@ -54,7 +58,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // ✅ واجهات المستخدم العادي فقط
 Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'userDashboard'])->name('user.dashboard');
+
 });
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/profile', [ProfileController::class, 'create'])->name('user.profile');
+//     Route::put('/profile', [ProfileController::class, 'store'])->name('user.profile');
+// });
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user-profile', [InfoUserController::class, 'create'])->name('user.profile');
+    Route::post('/user-profile', [InfoUserController::class, 'store'])->name('user.profile.update');
+});
+
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
@@ -83,3 +97,6 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('user.profile');
 });
+Route::resource('admin/tracks', TrackController::class);
+
+// Route::get('admin/tracks', [TrackController::class, 'index']); // ✅

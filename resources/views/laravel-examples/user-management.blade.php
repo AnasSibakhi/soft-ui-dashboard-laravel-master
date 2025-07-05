@@ -11,7 +11,7 @@
                     <div>
                         <h5 class="mb-0">All Users</h5>
                     </div>
-                    <a href="#" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; New User</a>
+                    <a href="user-profile" class="btn bg-gradient-primary btn-sm mb-0" type="button">+&nbsp; New User</a>
                 </div>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
@@ -25,7 +25,7 @@
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created At</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                             </tr>
                         </thead>
                         <tbody>
