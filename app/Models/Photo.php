@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Photo extends Model
 {
-    use HasFactory;
-    public function user() {
-    return $this->belongsTo(User::class);
-}
+    protected $fillable = ['filename', 'photoable_id', 'photoable_type'];
+
+    public function photoable()
+    {
+        return $this->morphTo();
+    }
 
 }

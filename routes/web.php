@@ -1,18 +1,26 @@
 <?php
-
+use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\Admin\ResetController;
+use App\Http\Controllers\Admin\TrackController;
+use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\InfoUserController;
+use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\RegisterController;
 use App\Http\Controllers\Admin\SessionsController;
+use App\Http\Controllers\Admin\CourseQiuzController;
+use App\Http\Controllers\Admin\CourseVideoController;
+use App\Http\Controllers\Admin\TrackCourseController;
+use App\Http\Controllers\Admin\QuizQuestionController;
 use App\Http\Controllers\Admin\ChangePasswordController;
-use App\Http\Controllers\Admin\TrackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,8 +92,6 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('user.dashboard');
 });
 
-
-
 Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/dashboard', function () {
         return view('user.dashboard');
@@ -98,5 +104,16 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('user.profile');
 });
 Route::resource('admin/tracks', TrackController::class);
+    Route::resource('admin/tracks.course', TrackCourseController::class);
 
-// Route::get('admin/tracks', [TrackController::class, 'index']); // ✅
+Route::resource('admin/course', CourseController::class);
+
+Route::resource('admin/videos', VideoController::class);
+    Route::resource('admin/course.videos', CourseVideoController::class);
+
+Route::resource('admin/quizzes', QuizController::class);
+    Route::resource('admin/quizzes.course', CourseQiuzController::class);
+
+// Route::resource('admin/question', QuestionController::class);
+
+Route::resource('admin/quizzes.question', QuizQuestionController::class);

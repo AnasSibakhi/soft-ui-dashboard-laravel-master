@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
        Schema::create('quizzes', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
+    $table->bigIncrements('id');
+    $table->string('name');
     $table->foreignId('course_id')->constrained()->onDelete('cascade');
     $table->timestamps();
 });

@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
       Schema::create('questions', function (Blueprint $table) {
-    $table->id();
-    $table->text('question_text');
-    $table->string('correct_answer');
-    $table->json('choices'); // أو جدول منفصل إذا تحب خيارات متعددة
+    $table->bigIncrements('id');
+    $table->string('title');
+     $table->string('answers');
+    $table->string('right_answer');
+    $table->string('score'); // أو جدول منفصل إذا تحب خيارات متعددة
     $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
     $table->timestamps();
 });

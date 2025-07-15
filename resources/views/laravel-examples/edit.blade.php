@@ -3,6 +3,7 @@
 @section('content')
 <div class="container mt-4">
     <h4>Edit User</h4>
+    {{-- @include('inclode.errors') --}}
     <form action="{{ route('user.update', $user->id) }}" method="POST">
         @csrf
         @method('PUT')

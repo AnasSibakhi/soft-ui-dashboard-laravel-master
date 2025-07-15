@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-     Schema::create('photos', function (Blueprint $table) {
-      $table->id();
-      $table->string('url');
-      $table->foreignId('user_id')->constrained()->onDelete('cascade');
-     $table->timestamps();
-         });
+    // migration for photos table
+Schema::create('photos', function (Blueprint $table) {
+    $table->id();
+    $table->string('filename');
+    $table->unsignedBigInteger('photoable_id');
+    $table->string('photoable_type'); // مثال: 'App\User' أو 'App\Course'
+    $table->timestamps();
+});
 
     }
 

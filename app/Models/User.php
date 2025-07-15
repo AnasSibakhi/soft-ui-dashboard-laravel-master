@@ -52,17 +52,19 @@ public function orders()
 {
     return $this->hasMany(Order::class);
 }
-public function photos() {
-    return $this->hasMany(Photo::class);
-}
 
-public function courses() {
+public function courses()
+{
     return $this->belongsToMany(Course::class);
 }
+
 
 public function quizzes() {
     return $this->belongsToMany(Quiz::class)->withPivot('score')->withTimestamps();
 }
 
-
+public function photos()
+{
+    return $this->morphMany(Photo::class, 'photoable');
+}
 }

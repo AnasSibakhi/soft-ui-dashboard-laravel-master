@@ -9,27 +9,27 @@ class Course extends Model
 {
     use HasFactory;
 
-    public function track() {
-    return $this->belongsTo(Track::class);
-}
+    protected $fillable = ['title', 'status', 'link',  'track_id'];
 
-public function user() {
-    return $this->belongsTo(User::class);
-}
-
-public function videos() {
-    return $this->hasMany(Video::class);
-}
-
-public function quizzes() {
-    return $this->hasMany(Quiz::class);
-}
-public function users() {
+public function users()
+{
     return $this->belongsToMany(User::class);
 }
 
-public function tracks() {
-    return $this->belongsToMany(Track::class);
+    public function videos() {
+        return $this->hasMany(Video::class);
+    }
+
+    public function quizzes() {
+        return $this->hasMany(Quiz::class);
+    }
+public function photos()
+{
+    return $this->morphMany(Photo::class, 'photoable');
+}
+public function track()
+{
+    return $this->belongsTo(Track::class);
 }
 
 

@@ -2,19 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Course;
 
 class Track extends Model
 {
+    use HasFactory;
+
     protected $fillable = ['name', 'created_at'];
 
-    // Optional: protected $table = 'tracks';
-    // Optional: protected $fillable = ['name', 'description'];
 
-// في Track.php
-public function courses() {
-    return $this->belongsToMany(Course::class);
+    public function courses()
+{
+    return $this->hasMany(Course::class); // تأكد من وجود 'track_id'
 }
-
 
 }

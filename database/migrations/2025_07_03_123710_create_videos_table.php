@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
     Schema::create('videos', function (Blueprint $table) {
-    $table->id();
+    $table->bigIncrements('id');
     $table->string('title');
-    $table->string('url');
+      $table->text('link');
     $table->foreignId('course_id')->constrained()->onDelete('cascade');
     $table->timestamps();
 });
@@ -26,6 +26,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('videos');
+     Schema::table('videos', function (Blueprint $table) {
+    $table->string('file')->nullable()->after('link');
+});
+
     }
 };

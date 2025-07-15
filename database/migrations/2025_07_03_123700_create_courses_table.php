@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-   Schema::create('courses', function (Blueprint $table) {
-    $table->id();
-    $table->string('title');
-    $table->text('description')->nullable();
-    $table->foreignId('track_id')->constrained()->onDelete('cascade');
-    $table->foreignId('user_id')->constrained()->onDelete('cascade'); // المنشئ
-    $table->timestamps();
-});
-
+        Schema::create('courses', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('title');
+            $table->integer('status')->default(0); // تم التعديل من text إلى integer
+            $table->string('link');
+            $table->foreignId('track_id')->constrained()->onDelete('cascade');
+            $table->string('image')->nullable(); // إذا كنت سترفع صورة للكورس
+            $table->timestamps();
+        });
     }
 
     /**

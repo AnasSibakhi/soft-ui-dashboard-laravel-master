@@ -8,16 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
     use HasFactory;
-    public function course() {
-    return $this->belongsTo(Course::class);
-}
 
-public function questions() {
-    return $this->hasMany(Question::class);
-}
-public function users() {
-    return $this->belongsToMany(User::class)->withPivot('score')->withTimestamps();
-}
+    protected $fillable = ['name', 'course_id'];
 
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withPivot('score')->withTimestamps();
+    }
 }
