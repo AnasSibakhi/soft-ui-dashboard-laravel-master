@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\CourseVideoController;
 use App\Http\Controllers\Admin\TrackCourseController;
 use App\Http\Controllers\Admin\QuizQuestionController;
 use App\Http\Controllers\Admin\ChangePasswordController;
+use App\Models\Quiz;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +115,7 @@ Route::resource('admin/videos', VideoController::class);
 Route::resource('admin/quizzes', QuizController::class);
     Route::resource('admin/quizzes.course', CourseQiuzController::class);
 
-// Route::resource('admin/question', QuestionController::class);
+Route::resource('admin/question', QuestionController::class , ['except' => ['show']]);
+Route::resource('admin/quiz.questions', QuizQuestionController::class);
 
-Route::resource('admin/quizzes.question', QuizQuestionController::class);
+Route::resource('quizzes.questions', QuestionController::class);

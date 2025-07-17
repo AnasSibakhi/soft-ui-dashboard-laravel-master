@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('questions', function (Blueprint $table) {
+   Schema::create('questions', function (Blueprint $table) {
     $table->bigIncrements('id');
     $table->string('title');
-     $table->string('answers');
+    $table->json('answers');
     $table->string('right_answer');
-    $table->string('score'); // أو جدول منفصل إذا تحب خيارات متعددة
+    $table->integer('score'); // أو float إذا بدك أرقام عشرية
     $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
     $table->timestamps();
 });
+
+
 
     }
 

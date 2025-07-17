@@ -18,7 +18,7 @@ class QuestionFactory extends Factory
                 'D' => $this->faker->word(),
             ]),
             'right_answer' => $this->faker->randomElement(['A', 'B', 'C', 'D']), // ✅ عشوائي
-            'score' => $this->faker->randomElement([ 20 , 30, 40 ,50, 60 , 70 , 80 , 90 , 100]),
+            'score' => $this->faker->randomElement([ 5 ,10 , 15 ,20 ]),
             'quiz_id' => Quiz::inRandomOrder()->first()?->id ?? 1,
         ];
     }

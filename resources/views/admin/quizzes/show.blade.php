@@ -1,64 +1,66 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h6 class="mb-0">Quiz: {{ $quiz->name }}</h6>
-            <a href="{{ route('quiz.question.create', ['quiz_id' => $quiz->id]) }}" class="btn btn-sm btn-primary">
+        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 text-uppercase text-sm">Quiz: {{ $quiz->name }}</h6>
+            <a href="{{ route('quiz.questions.create', ['quiz' => $quiz->id]) }}" class="btn btn-sm bg-gradient-primary">
                 <i class="fas fa-plus me-1"></i> Add Question
             </a>
         </div>
 
-        <div class="card-body">
+        <div class="card-body px-0 pt-0 pb-2">
             @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
+                <div class="alert alert-success alert-dismissible fade show mx-4 my-3" role="alert">
+                    <i class="fas fa-check-circle me-1"></i> {{ session('success') }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
             @if ($quiz->questions->count())
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover text-center">
-                        <thead class="table-light">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0 text-center">
+                        <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th>Answers</th>
-                                <th>Correct</th>
-                                <th>Score</th>
-                                <th>Actions</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">question</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">Answers</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">Correct</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">Score</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($quiz->questions as $index => $question)
                                 @php
                                     $answers = json_decode($question->answers, true);
-                                    $correctLetter = strtoupper($question->right_answer);
-                                    $correctIndex = ord($correctLetter) - 65;
-                                    $correctAnswer = $answers[$correctIndex] ?? 'N/A';
+                                    $correctLetter = strtoupper($question->right_answer ?? '');
+                                    $correctIndex = is_string($correctLetter) && strlen($correctLetter) === 1 ? ord($correctLetter) - 65 : null;
+                                    $correctAnswer = ($correctIndex !== null && isset($answers[$correctIndex])) ? $answers[$correctIndex] : 'N/A';
                                 @endphp
                                 <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $question->title }}</td>
-                                    <td class="text-start">
-                                        <ul class="list-unstyled mb-0">
+                                    {{-- <td class="text-sm">{{ $index + 1 }}</td> --}}
+                                    <td class="text-sm">{{ $question->title }}</td>
+                                    <td class="text-start text-sm">
+                                        <ul class="list-unstyled mb-0 ps-3">
                                             @foreach ($answers as $i => $ans)
-                                                <li><strong>{{ chr(65 + $i) }}.</strong> {{ $ans }}</li>
+                                                @php
+                                                    $label = is_numeric($i) ? chr(65 + (int) $i) : '?';
+                                                @endphp
+                                                <li><strong>{{ $label }}.</strong> {{ $ans }}</li>
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td><span class="badge bg-success">{{ $correctAnswer }}</span></td>
-                                    <td>{{ $question->score }}</td>
+                                    <td><span class="badge bg-success text-white">{{ $correctAnswer }}</span></td>
+                                    <td class="text-sm">{{ $question->score }}</td>
                                     <td>
-                                        <a href="{{ route('question.edit', $question->id) }}" class="btn btn-sm btn-outline-primary">
+                                        <a href="{{ route('question.edit', $question->id) }}" class="btn btn-link text-primary text-xs">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('question.destroy', $question->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?');">
+                                        <form action="{{ route('question.destroy', $question->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button class="btn btn-sm btn-outline-danger">
+                                            <button class="btn btn-link text-danger text-xs" onclick="return confirm('Are you sure?')">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </form>
@@ -69,7 +71,9 @@
                     </table>
                 </div>
             @else
-                <p class="text-muted text-center my-4">No questions found for this quiz.</p>
+                <div class="text-center py-4">
+                    <p class="text-muted text-sm mb-0">No questions found for this quiz.</p>
+                </div>
             @endif
         </div>
     </div>
