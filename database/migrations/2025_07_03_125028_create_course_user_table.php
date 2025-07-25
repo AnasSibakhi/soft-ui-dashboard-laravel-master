@@ -11,12 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-  Schema::create('course_user', function (Blueprint $table) {
-    $table->integer('course_id')->constrained()->onDelete('cascade');
-    $table->integer('user_id')->constrained()->onDelete('cascade');
-    $table->timestamps();
+Schema::create('course_user', function (Blueprint $table) {
+    $table->bigIncrements('id');
+    $table->foreignId('course_id')->constrained()->onDelete('cascade');
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
+    // أعمدة إضافية مفيدة:
+    $table->integer('progress')->default(0); // نسبة التقدم (0-100)
+    $table->boolean('completed')->default(false); // هل الكورس مكتمل؟
+    $table->timestamp('started_at')->nullable(); // تاريخ بدء الكورس
+    $table->timestamp('completed_at')->nullable(); // تاريخ إنهاء الكورس
+
+    $table->timestamps();
 });
+
 
 
 

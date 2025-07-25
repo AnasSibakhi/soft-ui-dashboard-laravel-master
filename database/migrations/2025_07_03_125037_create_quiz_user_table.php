@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('quiz_user', function (Blueprint $table) {
-$table->bigIncrements('id');
+Schema::create('quiz_user', function (Blueprint $table) {
+    $table->bigIncrements('id');
     $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
     $table->foreignId('user_id')->constrained()->onDelete('cascade');
     $table->integer('score')->nullable(); // نتيجة المحاولة
+    $table->boolean('completed')->default(false); // حالة الانتهاء من الكويز
     $table->timestamps();
 });
+
 
     }
 

@@ -11,6 +11,7 @@ class QuizFactory extends Factory
     {
         return [
             'name' => strtolower($this->faker->words(2, true)),
+             'description' => $this->faker->paragraph(),
             'course_id' => Course::inRandomOrder()->first()?->id ?? 1,
         ];
     }

@@ -31,17 +31,19 @@ class SessionsController extends Controller
                 $user->email === 'admin@example.com' &&
                 Hash::check('secret123', $user->password)
             ) {
-                return view('admin/dashboard');
+              return redirect()->route('admin.dashboard');
+
             }
 
             // ✅ إذا كان دوره "admin" بشكل عام
             if ($user->role === 'admin') {
-                return view('admin/dashboard');
+               return redirect()->route('admin.dashboard');
+
             }
 
             // ✅ إذا كان دوره "user"
             if ($user->role === 'user') {
-                return redirect()->route('user.dashboard');
+              return redirect()->intended('/');
             }
 
             // ❌ دور غير معروف
@@ -60,7 +62,7 @@ class SessionsController extends Controller
     session()->invalidate();
     session()->regenerateToken();
 
-    return view('session.login-session')->with('success', 'تم تسجيل الخروج بنجاح.');
+return redirect('/');
 }
 
 }

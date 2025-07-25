@@ -4,24 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use App\Models\Course;
+use App\Models\Order;
+use App\Models\Quiz;
+use App\Models\Track;
 
 class UserDashboardController extends Controller
 {
-
-
-    public function userDashboard()
+public function dashboard()
 {
-    return view('user.dashboard');
+    $user = Auth::user(); // ممكن يكون null إذا مش مسجل
+    $latestCourses = Course::latest()->take(10)->get();
+
+    $tracks_count = \App\Models\Track::count();
+    $users_count = \App\Models\User::count();
+    $users = \App\Models\User::latest()->take(6)->get();
+
+    $courses = $user ? $user->courses()->with('track', 'users')->get() : collect();
+    $quizzes = $user ? $user->quizzes()->with('course')->get() : collect();
+
+    return view('user.dashboard', compact(
+        'user',
+        'tracks_count',
+        'courses',
+        'quizzes',
+        'users',
+        'users_count',
+        'latestCourses'
+    ));
 }
 
- public function dashboard()
-    {
-        $user = Auth::user();
-
-        // جلب آخر 5 طلبات
-        $orders = $user->orders()->latest()->take(5)->get();
-
-        return view('user.dashboard', compact('user', 'orders'));
-    }
 
 }

@@ -55,13 +55,16 @@ public function orders()
 
 public function courses()
 {
-    return $this->belongsToMany(Course::class);
+    return $this->belongsToMany(Course::class)->withPivot('progress')->withTimestamps();
 }
 
 
-public function quizzes() {
-    return $this->belongsToMany(Quiz::class)->withPivot('score')->withTimestamps();
+
+public function quizzes()
+{
+    return $this->belongsToMany(Quiz::class)->withPivot('score', 'completed')->withTimestamps();
 }
+
 
 public function photos()
 {
