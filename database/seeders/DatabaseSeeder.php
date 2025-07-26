@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         // 2. إنشاء كورسات مرتبطة بالتراكات
         foreach ($tracks as $track) {
-            Course::factory()->count(3)->create([
+            Course::factory()->count(5)->create([
                 'track_id' => $track->id,
             ]);
         }

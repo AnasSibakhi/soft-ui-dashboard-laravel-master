@@ -30,8 +30,8 @@ use App\Http\Controllers\User\CourseController; // تحكم المستخدم ف�
 
 // 1. مسارات الضيوف (غير مسجلين)
 Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisterController::class, 'create']);
-    Route::post('/register', [RegisterController::class, 'store']);
+    // Route::get('/register', [RegisterController::class, 'create']);
+    // Route::post('/register', [RegisterController::class, 'store']);
 
     Route::get('/login', [SessionsController::class, 'create'])->name('login');
     Route::post('/session', [SessionsController::class, 'store'])->name('session.store');
@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function () {
 // 5. مسارات الأدمن محمية
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'adminDashboard'])->name('admin.dashboard');
+Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('dashboard');
 
     Route::get('/billing', fn() => view('admin.billing'))->name('billing');
     Route::get('/profile', fn() => view('admin.profile'))->name('profile');

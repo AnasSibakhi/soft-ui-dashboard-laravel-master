@@ -73,3 +73,36 @@ body {
 .hidden {
     display: none;
 }
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+    function reveal() {
+      const windowHeight = window.innerHeight;
+
+      revealElements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < windowHeight - 100) {
+          el.classList.add('visible');
+        }
+      });
+    }
+
+    // عند تحميل الصفحة
+    reveal();
+
+    // عند التمرير
+    window.addEventListener('scroll', reveal);
+  });
+</script>

@@ -16,7 +16,10 @@ public function dashboard()
 {
     $user = Auth::user(); // ممكن يكون null إذا مش مسجل
     $latestCourses = Course::latest()->take(10)->get();
-
+      $famousTracks = Track::withCount('courses')
+        ->orderByDesc('courses_count')
+        ->take(10) // عدد التراكات التي تريد عرضها
+        ->get();
     $tracks_count = \App\Models\Track::count();
     $users_count = \App\Models\User::count();
     $users = \App\Models\User::latest()->take(6)->get();
@@ -31,7 +34,8 @@ public function dashboard()
         'quizzes',
         'users',
         'users_count',
-        'latestCourses'
+        'latestCourses',
+        'famousTracks'
     ));
 }
 

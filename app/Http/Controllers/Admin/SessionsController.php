@@ -14,47 +14,60 @@ class SessionsController extends Controller
         return view('session.login-session');
     }
 
-    public function store(Request $request)
-    {
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required',
-        ]);
+public function store(Request $request)
+{
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+      $credentials = $request->only('email', 'password');
+    $name = $request->input('name', 'New User');
 
-            $user = Auth::user();
+    $credentials = $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
+    ]);
 
-            // ✅ إذا كان المستخدم هو الادمن الخاص:
-            if (
-                $user->email === 'admin@example.com' &&
-                Hash::check('secret123', $user->password)
-            ) {
-              return redirect()->route('admin.dashboard');
+    // جلب الاسم إن وُجد
+    $name = $request->input('name', 'New User');
 
-            }
+    $user = \App\Models\User::where('email', $credentials['email'])->first();
 
-            // ✅ إذا كان دوره "admin" بشكل عام
-            if ($user->role === 'admin') {
-               return redirect()->route('admin.dashboard');
-
-            }
-
-            // ✅ إذا كان دوره "user"
-            if ($user->role === 'user') {
-              return redirect()->intended('/');
-            }
-
-            // ❌ دور غير معروف
-            Auth::logout();
-            return redirect('/login')->withErrors(['access' => 'صلاحيات الدخول غير معروفة.']);
-        }
-
-        return back()->withErrors([
-            'email' => 'بيانات الدخول غير صحيحة.',
+    if (!$user) {
+        $user = \App\Models\User::create([
+            'name'     => $name,
+            'email'    => $credentials['email'],
+            'password' => Hash::make($credentials['password']),
+            'role'     => 'user',
         ]);
     }
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+        $user = Auth::user();
+
+        if (
+            $user->email === 'admin@example.com' &&
+            Hash::check('secret123', $user->password)
+        ) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->role === 'user') {
+            return redirect()->intended('/');
+        }
+
+        Auth::logout();
+        return redirect('/login')->withErrors(['access' => 'صلاحيات الدخول غير معروفة.']);
+    }
+
+    return back()->withErrors([
+        'email' => 'بيانات الدخول غير صحيحة.',
+    ]);
+}
+
 
   public function destroy()
 {

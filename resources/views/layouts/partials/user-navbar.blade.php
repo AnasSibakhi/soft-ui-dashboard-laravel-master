@@ -23,10 +23,11 @@
 >
   <div class="container-fluid d-flex justify-content-between align-items-center px-3" style="height: 100%; max-width: 100%;">
     <!-- الشعار -->
-    <a class="navbar-brand fw-bold text-primary d-flex align-items-center gap-2" href="{{ url('/') }}" style="font-size: 1.3rem; user-select: none; line-height: 1;">
-      <i class="fas fa-graduation-cap" style="color:#2563EB; font-size: 1.7rem; text-shadow: 0 0 8px rgba(37, 99, 235, 0.7); line-height: 1;"></i>
-      Edvanta
-    </a>
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url('/') }}" style="font-size: 1.3rem; user-select: none; line-height: 1;">
+  <i class="fas fa-graduation-cap" style="color:#2563EB; font-size: 1.7rem; text-shadow: 0 0 8px rgba(37, 99, 235, 0.7); line-height: 1;"></i>
+  <span style="color: #000;">Edvanta</span>
+</a>
+
 
     <!-- البحث -->
     <form class="d-none d-lg-flex mx-auto align-items-center" method="GET" action="" role="search" style="width: 600px; position: relative; height: 43px;">

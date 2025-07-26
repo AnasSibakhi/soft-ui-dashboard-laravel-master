@@ -2,66 +2,132 @@
 
 @section('content')
 
-  <main class="main-content  mt-0">
-    <section>
-      <div class="page-header min-vh-75">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
-              <div class="card card-plain mt-8">
-                {{-- <div class="card-header pb-0 text-left bg-transparent">
-                  <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
-                  <p class="mb-0">Create a new acount<br></p>
-                  <p class="mb-0">OR Sign in with these credentials:</p>
-                  <p class="mb-0">Email <b>admin@softui.com</b></p>
-                  <p class="mb-0">Password <b>secret</b></p>
-                </div> --}}
-                <div class="card-body">
-                  <form role="form" method="POST" action="/session">
-                    @csrf
-                    <label>Email</label>
-                    <div class="mb-3">
-                      <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="" aria-label="Email" aria-describedby="email-addon">
-                      @error('email')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                      @enderror
-                    </div>
-                    <label>Password</label>
-                    <div class="mb-3">
-                      <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="secret" aria-label="Password" aria-describedby="password-addon">
-                      @error('password')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                      @enderror
-                    </div>
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
-                      <label class="form-check-label" for="rememberMe">Remember me</label>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
-                    </div>
-                  </form>
-                </div>
-                <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                <small class="text-muted">Forgot you password? Reset you password
-                  <a href="/login/forgot-password" class="text-info text-gradient font-weight-bold">here</a>
-                </small>
-                  <p class="mb-4 text-sm mx-auto">
-                    Don't have an account?
-                    <a href="register" class="text-info text-gradient font-weight-bold">Sign up</a>
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('../assets/img/curved-images/curved6.jpg')"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* يمنع الشريط */
+  background: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  padding: 0 20px; /* padding بسيط يوازن */
+  box-sizing: border-box;
+  gap: 20px;
+}
+
+.image-side {
+  flex: 1;
+  margin: 20px; /* تبعد الصورة عن الأطراف */
+  border-radius: 20px; /* حواف ناعمة كاملة */
+  background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1400&q=80');
+  background-size: cover;
+  background-position: center right;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+
+.login-card {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-color: white;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.login-card form {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  padding: 30px 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgb(0 0 0 / 0.1);
+}
+
+
+  .login-card {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background-color: white;
+  }
+
+
+  @media (max-width: 900px) {
+    .login-container {
+      flex-direction: column-reverse;
+    }
+
+    .image-side {
+      height: 250px;
+    }
+
+    .login-card {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="login-container">
+  <div class="login-card">
+    <form role="form" method="POST" action="/session">
+      @csrf
+
+      <h3 class="text-center mb-4" style="color: #333; font-weight: 700;">Edvanta </h3>
+
+      <label for="name">Name</label>
+      <div class="mb-3">
+        <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" value="{{ old('name') }}">
+        @error('name')
+          <p class="text-danger text-xs mt-2">{{ $message }}</p>
+        @enderror
       </div>
-    </section>
-  </main>
+
+      <label for="email">Email</label>
+      <div class="mb-3">
+        <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ old('email') }}">
+        @error('email')
+          <p class="text-danger text-xs mt-2">{{ $message }}</p>
+        @enderror
+      </div>
+
+      <label for="password">Password</label>
+      <div class="mb-3">
+        <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="secret">
+        @error('password')
+          <p class="text-danger text-xs mt-2">{{ $message }}</p>
+        @enderror
+      </div>
+
+      <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+        <label class="form-check-label" for="rememberMe">Remember me</label>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
+      </div>
+
+      <div class="text-center mt-4">
+        <small class="text-muted">
+          Forgot your password? Reset your password
+          <a href="/login/forgot-password" class="text-info text-gradient font-weight-bold">here</a>
+        </small>
+      </div>
+    </form>
+  </div>
+
+  <div class="image-side"></div>
+</div>
 
 @endsection
