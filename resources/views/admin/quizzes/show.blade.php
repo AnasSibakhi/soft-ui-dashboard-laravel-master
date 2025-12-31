@@ -23,7 +23,7 @@
                     <table class="table align-items-center mb-0 text-center">
                         <thead>
                             <tr>
-                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">question</th>
+                                <th class="text-uppercase text-secondary text-xs font-weight-bolder">Question</th>
                                 <th class="text-uppercase text-secondary text-xs font-weight-bolder">Answers</th>
                                 <th class="text-uppercase text-secondary text-xs font-weight-bolder">Correct</th>
                                 <th class="text-uppercase text-secondary text-xs font-weight-bolder">Score</th>
@@ -33,13 +33,19 @@
                         <tbody>
                             @foreach ($quiz->questions as $index => $question)
                                 @php
+                                    // حاول تحويل الإجابات من JSON إلى مصفوفة
                                     $answers = json_decode($question->answers, true);
+
+                                    // إذا json_decode رجع null، اعتبرها نص واحد
+                                    if (!is_array($answers)) {
+                                        $answers = [$question->answers];
+                                    }
+
                                     $correctLetter = strtoupper($question->right_answer ?? '');
                                     $correctIndex = is_string($correctLetter) && strlen($correctLetter) === 1 ? ord($correctLetter) - 65 : null;
-                                    $correctAnswer = ($correctIndex !== null && isset($answers[$correctIndex])) ? $answers[$correctIndex] : 'N/A';
+                                    $correctAnswer = ($correctIndex !== null && isset($answers[$correctIndex])) ? $answers[$correctIndex] : ($answers[0] ?? 'N/A');
                                 @endphp
                                 <tr>
-                                    {{-- <td class="text-sm">{{ $index + 1 }}</td> --}}
                                     <td class="text-sm">{{ $question->title }}</td>
                                     <td class="text-start text-sm">
                                         <ul class="list-unstyled mb-0 ps-3">

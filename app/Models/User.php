@@ -70,4 +70,10 @@ public function photos()
 {
     return $this->morphMany(Photo::class, 'photoable');
 }
+
+public function tracks()
+{
+    return $this->belongsToMany(Track::class);
+}
+
 }

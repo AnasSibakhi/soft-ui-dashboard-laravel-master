@@ -12,60 +12,81 @@
 
                 {{-- Select Quiz --}}
                 <div class="mb-3">
-                    <label for="quiz_id" class="form-label">Select Quiz</label>
-                    <select name="quiz_id" id="quiz_id" class="form-select" required>
+                    <label class="form-label">Select Quiz</label>
+                    <select name="quiz_id" class="form-select" required>
                         <option value="">Choose a quiz</option>
                         @foreach ($quizzes as $quiz)
-                            <option value="{{ $quiz->id }}" {{ old('quiz_id') == $quiz->id ? 'selected' : '' }}>
-                                {{ $quiz->name }}
-                            </option>
+                            <option value="{{ $quiz->id }}">{{ $quiz->name }}</option>
                         @endforeach
                     </select>
-                    @error('quiz_id') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
-                {{-- Title --}}
+                {{-- Question Title --}}
                 <div class="mb-3">
-                    <label for="title" class="form-label">Question Title</label>
-                    <input type="text" name="title" class="form-control" required value="{{ old('title') }}">
-                    @error('title') <small class="text-danger">{{ $message }}</small> @enderror
+                    <label class="form-label">Question Title</label>
+                    <input type="text" name="title" class="form-control" required>
                 </div>
 
-                {{-- Answers --}}
+                {{-- Question Type --}}
                 <div class="mb-3">
-                    <label class="form-label">Answers</label>
-                    <input type="text" name="answers[]" class="form-control mb-2" placeholder="Answer A" required value="{{ old('answers.0') }}">
-                    <input type="text" name="answers[]" class="form-control mb-2" placeholder="Answer B" required value="{{ old('answers.1') }}">
-                    <input type="text" name="answers[]" class="form-control mb-2" placeholder="Answer C" required value="{{ old('answers.2') }}">
-                    <input type="text" name="answers[]" class="form-control mb-2" placeholder="Answer D" required value="{{ old('answers.3') }}">
-                    @error('answers') <small class="text-danger">{{ $message }}</small> @enderror
+                    <label class="form-label">Question Type</label>
+                    <select name="type" id="type" class="form-select" required onchange="toggleAnswerFields()">
+                        <option value="">Choose Type</option>
+                        <option value="text">Text Answer</option>
+                        <option value="checkbox">Multiple Choices</option>
+                    </select>
+                </div>
+
+                {{-- Text Answer --}}
+                <div class="mb-3" id="text-answer" style="display:none;">
+                    <label class="form-label">Full Answer (Text)</label>
+                    <textarea name="answers" class="form-control" rows="3"></textarea>
+                </div>
+
+                {{-- Checkbox Answer Fields --}}
+                <div id="checkbox-answers" style="display:none;">
+                    <label class="form-label">Choices (4 Options)</label>
+
+                    @for ($i = 1; $i <= 4; $i++)
+                        <input type="text" name="choice[]" class="form-control mb-2" placeholder="Choice {{ $i }}">
+                    @endfor
                 </div>
 
                 {{-- Right Answer --}}
                 <div class="mb-3">
-                    <label for="right_answer" class="form-label">Correct Answer</label>
-                    <select name="right_answer" class="form-select" required>
-                        <option value="">Select the correct one</option>
-                        <option value="A" {{ old('right_answer') == 'A' ? 'selected' : '' }}>Answer A</option>
-                        <option value="B" {{ old('right_answer') == 'B' ? 'selected' : '' }}>Answer B</option>
-                        <option value="C" {{ old('right_answer') == 'C' ? 'selected' : '' }}>Answer C</option>
-                        <option value="D" {{ old('right_answer') == 'D' ? 'selected' : '' }}>Answer D</option>
-                    </select>
-                    @error('right_answer') <small class="text-danger">{{ $message }}</small> @enderror
+                    <label class="form-label">Correct Answer</label>
+                    <input type="text" name="right_answer" class="form-control" required>
                 </div>
 
                 {{-- Score --}}
                 <div class="mb-3">
-                    <label for="score" class="form-label">Score</label>
-                    <input type="number" name="score" class="form-control" min="1" max="100" value="{{ old('score', 1) }}" required>
-                    @error('score') <small class="text-danger">{{ $message }}</small> @enderror
+                    <label class="form-label">Score</label>
+                    <input type="number" name="score" class="form-control" min="1" max="100" required>
                 </div>
 
                 <div class="text-end">
-                    <button class="btn btn-primary">Save Question</button>
+                    <button type="submit" class="btn btn-primary">Save Question</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+function toggleAnswerFields() {
+    let type = document.getElementById("type").value;
+
+    if (type === "text") {
+        document.getElementById("text-answer").style.display = "block";
+        document.getElementById("checkbox-answers").style.display = "none";
+    } else if (type === "checkbox") {
+        document.getElementById("text-answer").style.display = "none";
+        document.getElementById("checkbox-answers").style.display = "block";
+    } else {
+        document.getElementById("text-answer").style.display = "none";
+        document.getElementById("checkbox-answers").style.display = "none";
+    }
+}
+</script>
+
 @endsection

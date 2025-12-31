@@ -25,4 +25,16 @@ class Quiz extends Model
     {
         return $this->belongsToMany(User::class)->withPivot('score')->withTimestamps();
     }
+
+public function answers()
+{
+    return $this->hasMany(QuizUserAnswer::class, 'quiz_id');
+}
+
+
+public function userAnswer()
+{
+    return $this->hasOne(QuizUserAnswer::class)->where('user_id', auth()->id());
+}
+
 }

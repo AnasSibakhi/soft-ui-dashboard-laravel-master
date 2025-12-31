@@ -62,7 +62,7 @@
 </li>
 
 <li class="nav-item pb-2">
-    <a class="nav-link {{ (Request::is('user-management') ? 'active' : '') }}" href="{{ url('user-management') }}">
+    <a class="nav-link {{ (Request::is('user-management') ? 'active' : '') }}" href="{{ url('admin/user-management') }}">
         <div class="icon icon-shape icon-sm shadow border-radius-md text-center me-2 d-flex align-items-center justify-content-center"
              style="background-color: {{ Request::is('user-management') ? '#DBEAFE' : '#fff' }};">
             <i class="fas fa-lg fa-list-ul ps-2 pe-2 text-center"

@@ -5,8 +5,10 @@
 @section('content')
 
 @include('inclode.home_picture')
+@auth
+    @include('inclode.mycourse')
+@endauth
 
-@include('inclode.mycourse')
 @include('inclode.track_famous_courses')
 
 @endsection

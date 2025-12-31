@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Track;
 use App\Models\Course;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -37,42 +38,51 @@ class CourseController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $rules = [
-            'title'      => 'required|min:10|max:150',
-            'status'     => 'required|integer|in:0,1',
-            'link'       => 'required|url',
-            'track_id'   => 'required|integer',
-            'images.*'   => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ];
+  public function store(Request $request)
+{
+    $rules = [
+        'title'       => 'required|min:10|max:150',
+        'description' => 'required|min:10|max:500',
+        'status'      => 'required|integer|in:0,1',
+        'link'        => 'required|url',
+        'track_id'    => 'required|integer',
+        'images.*'    => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ];
 
-        $validatedData = $request->validate($rules);
+    $validatedData = $request->validate($rules);
 
-        $course = Course::create([
-            'title'    => $validatedData['title'],
-            'link'     => $validatedData['link'],
-            'status'   => $validatedData['status'],
-            'track_id' => $validatedData['track_id'],
-        ]);
+    // توليد slug من العنوان
+    $slug = Str::slug($validatedData['title']);
+    $count = Course::where('slug', 'LIKE', "{$slug}%")->count();
+    if ($count > 0) {
+        $slug .= '-' . ($count + 1);
+    }
 
-        // رفع الصور إن وجدت
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $file) {
-                $filename = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('images'), $filename);
+    $course = Course::create([
+        'title'       => $validatedData['title'],
+        'description' => $validatedData['description'],
+        'slug'        => $slug,
+        'link'        => $validatedData['link'],
+        'status'      => $validatedData['status'],
+        'track_id'    => $validatedData['track_id'],
+    ]);
 
-                $course->photos()->create(['filename' => $filename]);
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $index => $file) {
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $filename);
 
-                if ($index === 0) {
-                    $course->image = $filename;
-                    $course->save();
-                }
+            $course->photos()->create(['filename' => $filename]);
+
+            if ($index === 0) {
+                $course->image = $filename;
+                $course->save();
             }
         }
+    }
 
     return redirect()->route('course.index')->with('status', 'Course created successfully.');
-    }
+}
 
     /**
      * Show the form for editing the specified resource.

@@ -45,13 +45,13 @@
   </main>
 
   {{-- Success Alert --}}
-  @if(session('success'))
+  @if(session('su   ccess'))
     <div class="position-fixed bg-success text-white rounded px-4 py-2"
          style="top: 1rem; right: 1rem; z-index: 1050;">
       {{ session('success') }}
     </div>
   @endif
-
+@include('layouts.footers.auth.footer')
   {{-- Core JS --}}
   <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
   <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>

@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\TracksController;
+use App\Http\Controllers\CoursesController;
+use App\Http\Controllers\QquizzesController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\QuizController;
 use App\Http\Controllers\Admin\UserController;
@@ -8,7 +13,6 @@ use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\Admin\ResetController;
 use App\Http\Controllers\Admin\TrackController;
 use App\Http\Controllers\Admin\VideoController;
-use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\InfoUserController;
@@ -20,6 +24,7 @@ use App\Http\Controllers\Admin\CourseVideoController;
 use App\Http\Controllers\Admin\TrackCourseController;
 use App\Http\Controllers\Admin\QuizQuestionController;
 use App\Http\Controllers\Admin\ChangePasswordController;
+use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\User\CourseController; // تحكم المستخدم في الكورسات
 
 /*
@@ -27,6 +32,34 @@ use App\Http\Controllers\User\CourseController; // تحكم المستخدم ف�
 | Web Routes
 |--------------------------------------------------------------------------
 */
+// عرض صفحة الكورس (بدون تسجيل دخول)
+Route::get('/courses/{slug}', [CoursesController::class, 'index'])
+    ->name('courses.show');
+
+// الكويز (عرض + إرسال) يحتاج تسجيل دخول
+Route::middleware('auth')->group(function () {
+Route::get('/courses/{slug}', [CoursesController::class, 'index'])
+    ->name('courses.show');
+    // عرض الكويز
+    Route::get('/courses/{slug}/quizzes/{name}', [QquizzesController::class, 'index'])
+        ->name('quiz.show');
+
+    // إرسال الإجابات
+    Route::post('/courses/{slug}/quizzes/{name}', [QquizzesController::class, 'submit'])
+        ->name('quiz.submit');
+});
+
+
+
+Route::get('/user/courses/search', [SearchController::class, 'search'])
+    ->name('user.courses.search');
+
+Route::get('tracks/{name}' , [TracksController::class, 'index']);
+
+//  Route::get('/quiz/{quiz}', [QuizController::class, 'show'])->name('quiz.show');
+
+// Route::post('/quiz/{quiz}/submit', [QuizController::class, 'submit'])->name('quiz.submit');
+
 
 // 1. مسارات الضيوف (غير مسجلين)
 Route::middleware('guest')->group(function () {
@@ -63,6 +96,7 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('user.profile.update');
 });
 
+
 // 4. مسارات المستخدمين المسجلين (أي دور) مشتركة (مثلاً logout)
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [SessionsController::class, 'destroy'])->name('logout');
@@ -75,7 +109,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'adminDashboard'])->name('admin.dashboard');
 Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('dashboard');
-
     Route::get('/billing', fn() => view('admin.billing'))->name('billing');
     Route::get('/profile', fn() => view('admin.profile'))->name('profile');
     Route::get('/rtl', fn() => view('admin.rtl'))->name('rtl');
@@ -84,7 +117,7 @@ Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('dashboar
     Route::get('/static-sign-in', fn() => view('admin.static-sign-in'))->name('sign-in');
     Route::get('/static-sign-up', fn() => view('admin.static-sign-up'))->name('sign-up');
 
-    Route::get('/user-management', [InfoUserController::class, 'index'])->name('user-management');
+Route::get('/user-management', [UserController::class, 'index'])->name('user-management');
     Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
@@ -101,5 +134,9 @@ Route::get('/admin/dashboard', [HomeController::class, 'index'])->name('dashboar
     Route::resource('quizzes.course', CourseQiuzController::class);
 
     Route::resource('question', QuestionController::class, ['except' => ['show']]);
+    Route::resource('quiz.questions', QuizQuestionController::class);
+
+});
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::resource('quiz.questions', QuizQuestionController::class);
 });

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
+            $table->string('description' , 500  );
+            $table->string('slug', 500)->nullable();
             $table->integer('status')->default(0); // تم التعديل من text إلى integer
             $table->string('link');
             $table->foreignId('track_id')->constrained()->onDelete('cascade');

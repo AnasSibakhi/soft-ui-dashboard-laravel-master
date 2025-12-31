@@ -4,25 +4,19 @@
 <div class="container py-4">
     <div class="card">
         <div class="card-header">
-            <h6>Add New Question</h6>
+            <h6>Add New Question to "{{ $quiz->name }}"</h6>
         </div>
         <div class="card-body">
-           <form method="POST" action="{{ route('question.store', $quiz->id) }}">
+            <form method="POST" action="{{ route('quiz.questions.store', $quiz->id) }}">
                 @csrf
 
-                {{-- Select Quiz (one option only) --}}
-                <div class="mb-3">
-                    <label for="quiz_id" class="form-label">Select Quiz</label>
-                    <select name="quiz_id" id="quiz_id" class="form-select" required>
-                        <option value="{{ $quiz->id }}" selected>{{ $quiz->name }}</option>
-                    </select>
-                    @error('quiz_id') <small class="text-danger">{{ $message }}</small> @enderror
-                </div>
+                {{-- Hidden Quiz ID --}}
+                <input type="hidden" name="quiz_id" value="{{ $quiz->id }}">
 
-                {{-- Title --}}
+                {{-- Question Title --}}
                 <div class="mb-3">
                     <label for="title" class="form-label">Question Title</label>
-                    <input type="text" name="title" class="form-control" required value="{{ old('title') }}">
+                    <input type="text" name="title" class="form-control" value="{{ old('title') }}" required>
                     @error('title') <small class="text-danger">{{ $message }}</small> @enderror
                 </div>
 
@@ -57,7 +51,7 @@
                 </div>
 
                 <div class="text-end">
-                    <button class="btn btn-primary">Save Question</button>
+                    <button type="submit" class="btn btn-primary">Save Question</button>
                 </div>
             </form>
         </div>

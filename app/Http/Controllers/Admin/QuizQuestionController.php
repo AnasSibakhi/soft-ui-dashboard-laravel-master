@@ -9,13 +9,30 @@ use App\Http\Controllers\Controller;
 
 class QuizQuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function create(Quiz $quiz)
     {
-    return view('admin.quizzes.createquestion', compact('quiz'));
-
+        return view('admin.quizzes.createquestion', compact('quiz'));
     }
 
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'quiz_id'      => 'required|exists:quizzes,id',
+            'title'        => 'required|string|max:255',
+            'answers'      => 'required|array|min:4',
+            'right_answer' => 'required|string|max:255',
+            'score'        => 'required|integer|min:1|max:100',
+        ]);
+
+        $question = new Question();
+        $question->quiz_id = $validated['quiz_id'];
+        $question->title = $validated['title'];
+        $question->answers = json_encode($validated['answers']);
+        $question->right_answer = $validated['right_answer'];
+        $question->score = $validated['score'];
+        $question->save();
+
+        return redirect()->route('question.index')->with('success', 'Question added successfully.');
+    }
 }
+

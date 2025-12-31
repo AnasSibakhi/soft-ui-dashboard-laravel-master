@@ -14,9 +14,12 @@ return new class extends Migration
    Schema::create('questions', function (Blueprint $table) {
     $table->bigIncrements('id');
     $table->string('title');
-    $table->json('answers');
-    $table->string('right_answer');
+     $table->json('answers')->default(json_encode([]));
+   $table->string('right_answer')->default('');
+
     $table->integer('score'); // أو float إذا بدك أرقام عشرية
+    $table->string('type')->default('mcq'); // mcq أو text
+
     $table->foreignId('quiz_id')->constrained()->onDelete('cascade');
     $table->timestamps();
 });

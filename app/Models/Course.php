@@ -2,15 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str; // ← لازم هذا السطر
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'status', 'link',  'track_id'];
+    protected $fillable = ['title', 'status', 'link',  'track_id' ,'description' ,'slug'];
 
+  protected static function booted()
+    {
+        static::creating(function ($course) {
+            if (empty($course->slug)) {
+                $course->slug = Str::slug($course->title);
+            }
+        });
+    }
 public function users()
 {
     return $this->belongsToMany(User::class);

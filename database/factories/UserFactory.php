@@ -43,16 +43,18 @@ class UserFactory extends Factory
     // Inline factory for Course
 
 
-public static function courseFactory(): array
+public static function courseFactory($faker): array
 {
+    $title = $faker->sentence;
     return [
-        'title' => fake()->sentence(),
-        'status' => fake()->word(), // أو يمكن تخصيصها أكثر
-        'link' => fake()->url(),
-        'track_id' => Track::factory(), // ينشئ Track جديد ويربطه تلقائيًا
+        'title'       => $title,
+        'description' => $faker->paragraph(),
+     'slug' => strtolower(str_replace(' ', '-', $title)),
+        'status'      => $faker->randomElement([0, 1]),
+        'link'        => $faker->url,
+        'track_id'    => Track::factory(),
     ];
 }
-
     // Inline factory for Video
     public static function videoFactory(): array
     {

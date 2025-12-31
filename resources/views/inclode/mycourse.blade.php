@@ -97,58 +97,72 @@
       text-decoration: none;
     }
 
-  .course-card {
-    display: flex;
-    align-items: center;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-    padding: 24px;
-    border: 1px solid #e2e8f0;
-    transition: transform 0.3s ease;
-    min-height: 170px;
-  }
+    .course-card {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.3s ease;
+      min-height: 170px;
+    }
 
-  .course-card:hover {
-    transform: translateY(-4px);
-  }
+    .course-card:hover {
+      transform: translateY(-4px);
+    }
 
-  .course-image {
-    width: 300px;
-    height: 180px;
-    border-radius: 14px;
-    object-fit: cover;
-    margin-right: 28px;
-    flex-shrink: 0;
-  }
+    .course-image {
+      width: 300px;
+      height: 180px;
+      border-radius: 14px;
+      object-fit: cover;
+      margin-right: 28px;
+      flex-shrink: 0;
+    }
 
-  .course-title {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 8px;
-  }
+    .course-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
 
-  .course-track,
-  .course-date {
-    font-size: 1rem;
-    color: #475569;
-    margin-bottom: 6px;
-  }
-
-
-
+    .course-track,
+    .course-date {
+      font-size: 1rem;
+      color: #475569;
+      margin-bottom: 6px;
+    }
 
     .course-info {
       flex: 1;
     }
 
-    .course-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #1e293b;
-      margin-bottom: 6px;
+    .course-title a,
+    .course-track a {
+      color: inherit;
+      text-decoration: none;
     }
+
+    .course-track a:hover {
+      color: #2563eb;
+    }
+    .course-title a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.course-track a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.course-image-link:hover img {
+  filter: brightness(0.85);
+  transition: filter 0.3s ease;
+}
 
 
   </style>
@@ -169,29 +183,47 @@
 
   <!-- كورسات -->
   <div id="courseScroll" class="course-scroll">
-    @forelse($latestCourses as $course)
-      <a href="#" class="course-card-link">
-        <div class="course-card">
-          @if($course->photos->first())
-            <img src="{{ asset('images/' . $course->photos->first()->filename) }}" class="course-image" alt="{{ $course->title }}">
-          @else
-            <img src="{{ asset('images/default.jpg') }}" class="course-image" alt="Default">
-          @endif
-          <div class="course-info">
-            <div class="course-title">{{ $course->title }}</div>
-            <div class="course-track">{{ $course->track->name ?? 'No Track' }}</div>
-            <div class="course-date">
-              <i class="fas fa-calendar-alt me-1"></i> {{ $course->created_at->format('M d, Y') }}
-            </div>
-          </div>
-        </div>
+@forelse($latestCourses as $course)
+  <div class="course-card-link" style="flex: 0 0 100%; scroll-snap-align: start;">
+    <div class="course-card">
+      {{-- رابط الصورة --}}
+      <a href="/courses/{{$course->slug}}" class="" style="display: block; flex-shrink: 0;">
+        @if($course->photos->first())
+          <img src="{{ asset('images/' . $course->photos->first()->filename) }}" class="course-image" alt="{{ $course->title }}">
+        @else
+          <img src="{{ asset('images/default.jpg') }}" class="course-image" alt="Default">
+        @endif
       </a>
-    @empty
-      <p>You are not enrolled in any courses yet.</p>
-    @endforelse
+
+      <div class="course-info">
+        {{-- رابط العنوان --}}
+        <div class="course-title">
+          <a href="/courses/{{$course->slug}}" style="color: inherit; text-decoration: none;">
+            {{ $course->title }}
+          </a>
+        </div>
+
+        {{-- رابط التراك --}}
+        <div class="course-track">
+          <a href="/track/{{$course->track->name}}" style="color: #475569; text-decoration: none;">
+            {{ $course->track->name ?? 'No Track' }}
+          </a>
+        </div>
+
+        <div class="course-date">
+          <i class="fas fa-calendar-alt me-1"></i> {{ $course->created_at->format('M d, Y') }}
+        </div>
+      </div>
+    </div>
+  </div>
+@empty
+  <p>You are not enrolled in any courses yet.</p>
+@endforelse
+
   </div>
 </div>
 </div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const scrollContainer = document.getElementById('courseScroll');
@@ -211,7 +243,6 @@
     }, 10000);
   });
 </script>
-
 
 </body>
 </html>

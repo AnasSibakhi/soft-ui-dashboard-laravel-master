@@ -28,13 +28,19 @@ class DatabaseSeeder extends Seeder
         // 3. إنشاء مستخدمين
         $users = User::factory()->count(10)->create();
 
-        // جلب كل الكورسات عشان نستخدمها للربط
+        // جلب كل الكورسات وكل التراكات للربط
         $courses = Course::all();
+        $allTracks = Track::all();
 
-        // 4. ربط المستخدمين بالكورسات بشكل عشوائي (1 إلى 3 كورسات لكل مستخدم)
+        // 4. ربط المستخدمين بالكورسات والمسارات بشكل عشوائي
         foreach ($users as $user) {
+            // ربط كورسات (1 إلى 3)
             $userCourses = $courses->random(rand(1, 3))->pluck('id')->toArray();
             $user->courses()->attach($userCourses);
+
+            // ربط Tracks (1 أو 2)
+            $userTracks = $allTracks->random(rand(1, 2))->pluck('id')->toArray();
+            $user->tracks()->attach($userTracks);
         }
 
         // 5. فيديوهات لكل كورس

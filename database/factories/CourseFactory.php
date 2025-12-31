@@ -12,9 +12,12 @@ class CourseFactory extends Factory
 {
     public function definition(): array
     {
+        $title = $this->faker->sentence;
         return [
-            'title'     => $this->faker->sentence(3),
-        'status'    => $this->faker->randomElement([0, 1]), // ✅ رقم فقط
+              'title'     => $title,
+             'description' => $this->faker->paragraph(),
+            'slug' => strtolower(str_replace(' ', '-', $title)),
+            'status'    => $this->faker->randomElement([0, 1]), // ✅ رقم فقط
             'link'      => $this->faker->url,
             'track_id'  => Track::factory(), // ينشئ Track تلقائيًا ويربطه
         ];
